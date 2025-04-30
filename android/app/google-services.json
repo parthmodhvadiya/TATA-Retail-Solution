@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "68136999291",
+    "project_id": "tata-retail-solution",
+    "storage_bucket": "tata-retail-solution.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:68136999291:android:a7bcdeb3bb31b97f1145de",
+        "android_client_info": {
+          "package_name": "collage.mad.tataretailsolution"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "68136999291-ggo33bf607gbrhhhsnea6nkllm07c0ca.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnQm9nUcUNT_U_Gz9-ypZ-qsv2ypGAO2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "68136999291-ggo33bf607gbrhhhsnea6nkllm07c0ca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
