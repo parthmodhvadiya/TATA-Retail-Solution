@@ -3,65 +3,133 @@ import 'package:http/http.dart' as http;
 import '../models/product.dart';
 
 class ProductService {
-  static const String baseUrl = 'http://localhost:5000/api/products';
+  // Try different URLs based on the platform
+  static String get baseUrl {
+    // For Android emulator
+    // return 'http://10.0.2.2:5000/api/products';
+
+    // For iOS simulator
+    // return 'http://localhost:5000/api/products';
+
+    // For physical device (replace with your computer's IP address)
+    return 'http://localhost:5000/api/products';
+  }
 
   Future<List<Product>> getProducts() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    try {
+      print('Attempting to fetch products from: $baseUrl');
+      final response = await http.get(Uri.parse(baseUrl));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => Product.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load products: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Product.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load products: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error in getProducts: $e');
+      print('Stack trace: ${StackTrace.current}');
+      rethrow;
     }
   }
 
   Future<Product> getProductById(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/$id'));
+    try {
+      print('Attempting to fetch product from: $baseUrl/$id');
+      final response = await http.get(Uri.parse('$baseUrl/$id'));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      return Product.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load product: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        return Product.fromJson(json.decode(response.body));
+      } else {
+        throw Exception(
+            'Failed to load product: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error in getProductById: $e');
+      print('Stack trace: ${StackTrace.current}');
+      rethrow;
     }
   }
 
   Future<Product> createProduct(Product product) async {
-    print('Creating product with data: ${product.toJson()}'); // Debug print
+    try {
+      print('Attempting to create product at: $baseUrl');
+      print('Product data: ${product.toJson()}');
 
-    final response = await http.post(
-      Uri.parse(baseUrl),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(product.toJson()),
-    );
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode(product.toJson()),
+      );
 
-    if (response.statusCode == 201) {
-      return Product.fromJson(json.decode(response.body));
-    } else {
-      print('Error response: ${response.body}'); // Debug print
-      throw Exception('Failed to create product: ${response.statusCode}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        return Product.fromJson(json.decode(response.body));
+      } else {
+        throw Exception(
+            'Failed to create product: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error in createProduct: $e');
+      print('Stack trace: ${StackTrace.current}');
+      rethrow;
     }
   }
 
   Future<Product> updateProduct(String id, Product product) async {
-    final response = await http.patch(
-      Uri.parse('$baseUrl/$id'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(product.toJson()),
-    );
+    try {
+      print('Attempting to update product at: $baseUrl/$id');
+      final response = await http.patch(
+        Uri.parse('$baseUrl/$id'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: json.encode(product.toJson()),
+      );
 
-    if (response.statusCode == 200) {
-      return Product.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to update product: ${response.statusCode}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return Product.fromJson(json.decode(response.body));
+      } else {
+        throw Exception(
+            'Failed to update product: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error in updateProduct: $e');
+      print('Stack trace: ${StackTrace.current}');
+      rethrow;
     }
   }
 
   Future<void> deleteProduct(String id) async {
-    final response = await http.delete(Uri.parse('$baseUrl/$id'));
+    try {
+      print('Attempting to delete product at: $baseUrl/$id');
+      final response = await http.delete(Uri.parse('$baseUrl/$id'));
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete product: ${response.statusCode}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode != 200) {
+        throw Exception(
+            'Failed to delete product: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error in deleteProduct: $e');
+      print('Stack trace: ${StackTrace.current}');
+      rethrow;
     }
   }
 }

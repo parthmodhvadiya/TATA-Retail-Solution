@@ -20,32 +20,43 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['_id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      price: (json['price'] ?? 0.0).toDouble(),
-      quantity: json['quantity'] ?? 0,
-      gstRate: (json['gstRate'] ?? 0.0).toDouble(),
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
-    );
+    try {
+      return Product(
+        id: json['_id']?.toString() ?? '',
+        name: json['name']?.toString() ?? '',
+        description: json['description']?.toString() ?? '',
+        price: (json['price'] is num) ? json['price'].toDouble() : 0.0,
+        quantity: (json['quantity'] is num) ? json['quantity'].toInt() : 0,
+        gstRate: (json['gstRate'] is num) ? json['gstRate'].toDouble() : 0.0,
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'].toString())
+            : DateTime.now(),
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'].toString())
+            : DateTime.now(),
+      );
+    } catch (e) {
+      print('Error parsing Product from JSON: $e');
+      print('JSON data: $json');
+      rethrow;
+    }
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'description': description,
-      'price': price,
-      'quantity': quantity,
-      'gstRate': gstRate,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
+    try {
+      return {
+        'name': name,
+        'description': description,
+        'price': price,
+        'quantity': quantity,
+        'gstRate': gstRate,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+    } catch (e) {
+      print('Error converting Product to JSON: $e');
+      rethrow;
+    }
   }
 
   double get finalPrice => price + (price * gstRate / 100);

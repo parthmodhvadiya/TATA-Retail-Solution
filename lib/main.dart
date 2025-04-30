@@ -3,11 +3,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 import 'providers/product_provider.dart';
+import 'providers/invoice_provider.dart';
 import 'screens/sign_in_screen.dart';
 import 'screens/sign_up_screen.dart';
 import 'screens/hello_screen.dart';
 import 'screens/home_dashboard.dart';
 import 'screens/add_product_screen.dart';
+import 'screens/view_products_screen.dart';
+import 'screens/create_invoice_screen.dart';
+import 'screens/view_invoices_screen.dart';
+import 'screens/sales_summary_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +41,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
+        ChangeNotifierProvider(create: (_) => InvoiceProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -66,6 +72,10 @@ class MyApp extends StatelessWidget {
           '/hello': (context) => const HelloScreen(),
           '/dashboard': (context) => const HomeDashboard(),
           '/add-product': (context) => const AddProductScreen(),
+          '/view-products': (context) => const ViewProductsScreen(),
+          '/create-invoice': (context) => const CreateInvoiceScreen(),
+          '/view-invoices': (context) => const ViewInvoicesScreen(),
+          '/sales-summary': (context) => const SalesSummaryScreen(),
         },
       ),
     );
