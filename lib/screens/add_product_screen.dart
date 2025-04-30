@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../services/product_service.dart';
+import '../models/product.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -10,16 +12,21 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
+  final _quantityController = TextEditingController();
   String _selectedGstRate = '5%';
   bool _isLoading = false;
 
   final List<String> _gstRates = ['5%', '12%', '18%', '28%'];
+  final ProductService _productService = ProductService();
 
   @override
   void dispose() {
     _nameController.dispose();
+    _descriptionController.dispose();
     _priceController.dispose();
+    _quantityController.dispose();
     super.dispose();
   }
 
@@ -27,16 +34,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      // TODO: Implement API call to save product
-      await Future.delayed(const Duration(seconds: 1)); // Simulate API call
-
-      setState(() => _isLoading = false);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Product saved successfully!')),
+      try {
+        final product = Product(
+          id: '', // Will be set by the backend
+          name: _nameController.text.trim(),
+          description: _descriptionController.text.trim(),
+          price: double.parse(_priceController.text),
+          quantity: int.parse(_quantityController.text),
+          gstRate: double.parse(_selectedGstRate.replaceAll('%', '')),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
-        Navigator.pop(context);
+
+        print('Sending product data: ${product.toJson()}'); // Debug print
+
+        await _productService.createProduct(product);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Product saved successfully!')),
+          );
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.toString()}')),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
     }
   }
@@ -45,7 +74,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add New Product')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -67,19 +96,46 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
                 controller: _priceController,
                 decoration: const InputDecoration(
-                  labelText: 'Base Price',
+                  labelText: 'Price',
                   border: OutlineInputBorder(),
                   prefixText: '₹ ',
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter base price';
+                    return 'Please enter price';
                   }
                   if (double.tryParse(value) == null) {
                     return 'Please enter a valid price';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _quantityController,
+                decoration: const InputDecoration(
+                  labelText: 'Quantity',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter quantity';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Please enter a valid quantity';
                   }
                   return null;
                 },

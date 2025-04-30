@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
+import 'providers/product_provider.dart';
 import 'screens/sign_in_screen.dart';
 import 'screens/sign_up_screen.dart';
 import 'screens/hello_screen.dart';
@@ -32,8 +33,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [Provider<AuthService>(create: (_) => AuthService())],
+      providers: [
+        Provider<AuthService>(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
+      ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Tata Retail Solution',
         theme: ThemeData(
           // This is the theme of your application.

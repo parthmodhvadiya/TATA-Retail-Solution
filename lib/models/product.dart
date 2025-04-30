@@ -4,8 +4,7 @@ class Product {
   final String description;
   final double price;
   final int quantity;
-  final String category;
-  final String imageUrl;
+  final double gstRate;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -15,23 +14,25 @@ class Product {
     required this.description,
     required this.price,
     required this.quantity,
-    required this.category,
-    required this.imageUrl,
+    required this.gstRate,
     required this.createdAt,
     required this.updatedAt,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['_id'],
-      name: json['name'],
-      description: json['description'],
-      price: json['price'].toDouble(),
-      quantity: json['quantity'],
-      category: json['category'],
-      imageUrl: json['imageUrl'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      price: (json['price'] ?? 0.0).toDouble(),
+      quantity: json['quantity'] ?? 0,
+      gstRate: (json['gstRate'] ?? 0.0).toDouble(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : DateTime.now(),
     );
   }
 
@@ -41,8 +42,11 @@ class Product {
       'description': description,
       'price': price,
       'quantity': quantity,
-      'category': category,
-      'imageUrl': imageUrl,
+      'gstRate': gstRate,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
+
+  double get finalPrice => price + (price * gstRate / 100);
 }

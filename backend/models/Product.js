@@ -6,9 +6,19 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  basePrice: {
+  description: {
+    type: String,
+    default: ''
+  },
+  price: {
     type: Number,
     required: true,
+    min: 0
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    default: 0,
     min: 0
   },
   gstRate: {
@@ -28,7 +38,7 @@ const productSchema = new mongoose.Schema({
 
 // Calculate final price with GST
 productSchema.virtual('finalPrice').get(function() {
-  return this.basePrice + (this.basePrice * this.gstRate / 100);
+  return this.price + (this.price * this.gstRate / 100);
 });
 
 // Update the updatedAt field before saving

@@ -12,16 +12,16 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://parthmodhvadiya15:oTqfSU7M2uqYvH7B@cluster0.eym68nw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect("mongodb+srv://parthmodhvadiya15:oTqfSU7M2uqYvH7B@cluster0.eym68nw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
 const productRoutes = require('./routes/productRoutes');
-const invoiceRoutes = require('./routes/invoiceRoutes');
+// const invoiceRoutes = require('./routes/invoiceRoutes'); // Commented out until implemented
 
 app.use('/api/products', productRoutes);
-app.use('/api/invoices', invoiceRoutes);
+// app.use('/api/invoices', invoiceRoutes); // Commented out until implemented
 
 // Error handling middleware
 app.use((err, req, res, next) => {
