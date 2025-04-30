@@ -18,10 +18,10 @@ mongoose.connect("mongodb+srv://parthmodhvadiya15:oTqfSU7M2uqYvH7B@cluster0.eym6
 
 // Routes
 const productRoutes = require('./routes/productRoutes');
-// const invoiceRoutes = require('./routes/invoiceRoutes'); // Commented out until implemented
+const invoiceRoutes = require('./routes/invoiceRoutes'); // Commented out until implemented
 
 app.use('/api/products', productRoutes);
-// app.use('/api/invoices', invoiceRoutes); // Commented out until implemented
+app.use('/api/invoices', invoiceRoutes); // Commented out until implemented
 
 // Error handling middleware
 app.use((err, req, res, next) => {

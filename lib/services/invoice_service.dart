@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/invoice.dart';
+import '../providers/invoice_provider.dart';
 
 class InvoiceService {
   final String baseUrl = 'http://localhost:5000/api/invoices';
